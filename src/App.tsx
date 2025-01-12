@@ -66,12 +66,6 @@ const App: React.FC = () => {
     return new Date(timestamp).toLocaleString();
   };
 
-  const buttonText = isRecording
-    ? "Recording... Click to Stop"
-    : isSending
-    ? "Processing..."
-    : "Click to Start Recording";
-
   return (
     <>
       <GlobalStyle />
@@ -80,9 +74,8 @@ const App: React.FC = () => {
           onClick={handleDiskClick}
           isRecording={isRecording}
           disabled={isSending}
-        >
-          {buttonText}
-        </CalminDisk>
+          aria-label={isRecording ? "Stop recording" : "Start recording"}
+        />
 
         {transcription && (
           <TranscriptionCard>
