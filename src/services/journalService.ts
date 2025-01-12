@@ -11,6 +11,7 @@ interface TranscriptionResponse {
     text: string;
     duration: number;
     language: string;
+    summary: string;
   };
 }
 

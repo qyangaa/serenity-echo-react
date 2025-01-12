@@ -46,6 +46,42 @@ export const TranscriptionCard = styled.div`
   transition: all 0.3s ease;
 `;
 
+export const SummarySection = styled.div`
+  h3 {
+    color: #1a237e;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #1a237e;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+`;
+
+export const TranscriptionSection = styled.div`
+  h3 {
+    color: #1a237e;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+`;
+
+export const Divider = styled.hr`
+  border: none;
+  height: 1px;
+  background: rgba(26, 35, 126, 0.2);
+  margin: 0.5rem 0;
+`;
+
 export const TranscriptionText = styled.div`
   background: rgba(255, 255, 255, 0.9);
   padding: 1.5rem;

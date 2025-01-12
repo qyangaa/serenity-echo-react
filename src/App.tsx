@@ -5,13 +5,18 @@ import {
   TranscriptionCard,
   TranscriptionText,
   TranscriptionMeta,
+  SummarySection,
+  Divider,
+  TranscriptionSection,
 } from "./styles/AppStyles";
 import { GlobalStyle } from "./styles/GlobalStyles";
 import { AudioRecorder } from "./services/audioService";
 import { sendJournalEntry } from "./services/journalService";
+import ReactMarkdown from "react-markdown";
 
 interface Transcription {
   text: string;
+  summary: string;
   timestamp: string;
   duration: string;
 }
@@ -41,6 +46,7 @@ const App: React.FC = () => {
 
           setTranscription({
             text: response.transcription.text,
+            summary: response.transcription.summary,
             timestamp: response.timestamp,
             duration: response.metadata.duration,
           });
@@ -80,7 +86,18 @@ const App: React.FC = () => {
 
         {transcription && (
           <TranscriptionCard>
-            <TranscriptionText>{transcription.text}</TranscriptionText>
+            <SummarySection>
+              <h3>Summary</h3>
+              <ReactMarkdown>{transcription.summary}</ReactMarkdown>
+            </SummarySection>
+
+            <Divider />
+
+            <TranscriptionSection>
+              <h3>Full Transcription</h3>
+              <TranscriptionText>{transcription.text}</TranscriptionText>
+            </TranscriptionSection>
+
             <TranscriptionMeta>
               <span>Recorded: {formatTimestamp(transcription.timestamp)}</span>
               <span>Duration: {transcription.duration}</span>
