@@ -1,48 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   GradientBackground,
   CalminDisk,
-  RecordingsList,
-  RecordingItem,
+  TranscriptionCard,
+  TranscriptionText,
+  TranscriptionMeta,
 } from "./styles/AppStyles";
 import { GlobalStyle } from "./styles/GlobalStyles";
 import { AudioRecorder } from "./services/audioService";
 import { sendJournalEntry } from "./services/journalService";
 
+interface Transcription {
+  text: string;
+  timestamp: string;
+  duration: string;
+}
+
 const App: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioRecorder] = useState(() => new AudioRecorder());
-  const [recordings, setRecordings] = useState<string[]>([]);
   const [isSending, setIsSending] = useState(false);
-
-  // Load recordings from localStorage on mount
-  useEffect(() => {
-    const savedRecordings = Object.keys(localStorage).filter((key) =>
-      key.startsWith("recording-")
-    );
-    setRecordings(savedRecordings);
-  }, []);
+  const [transcription, setTranscription] = useState<Transcription | null>(
+    null
+  );
 
   const handleDiskClick = async () => {
     try {
       if (!isRecording) {
+        setTranscription(null);
         await audioRecorder.startRecording();
         setIsRecording(true);
       } else {
         setIsSending(true);
         try {
           const recordingResult = await audioRecorder.stopRecording();
-          // Send to backend
-          await sendJournalEntry(
+          const response = await sendJournalEntry(
             recordingResult.base64Data,
             recordingResult.duration
           );
-          // Update local state
-          setRecordings((prev) => [...prev, recordingResult.fileName]);
-          console.log(
-            "Recording saved and sent to server:",
-            recordingResult.fileName
-          );
+
+          setTranscription({
+            text: response.transcription.text,
+            timestamp: response.timestamp,
+            duration: response.metadata.duration,
+          });
         } finally {
           setIsSending(false);
           setIsRecording(false);
@@ -55,28 +56,14 @@ const App: React.FC = () => {
     }
   };
 
-  const handlePlay = (fileName: string) => {
-    const audioData = localStorage.getItem(fileName);
-    if (audioData) {
-      const audio = new Audio(audioData);
-      audio.play();
-    }
-  };
-
-  const handleDelete = (fileName: string) => {
-    localStorage.removeItem(fileName);
-    setRecordings((prev) => prev.filter((name) => name !== fileName));
-  };
-
-  const formatDate = (fileName: string) => {
-    const timestamp = fileName.replace("recording-", "").replace(".mp3", "");
+  const formatTimestamp = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
   };
 
   const buttonText = isRecording
     ? "Recording... Click to Stop"
     : isSending
-    ? "Sending to server..."
+    ? "Processing..."
     : "Click to Start Recording";
 
   return (
@@ -91,18 +78,14 @@ const App: React.FC = () => {
           {buttonText}
         </CalminDisk>
 
-        {recordings.length > 0 && (
-          <RecordingsList>
-            {recordings.map((fileName) => (
-              <RecordingItem key={fileName}>
-                <span>{formatDate(fileName)}</span>
-                <div>
-                  <button onClick={() => handlePlay(fileName)}>Play</button>{" "}
-                  <button onClick={() => handleDelete(fileName)}>Delete</button>
-                </div>
-              </RecordingItem>
-            ))}
-          </RecordingsList>
+        {transcription && (
+          <TranscriptionCard>
+            <TranscriptionText>{transcription.text}</TranscriptionText>
+            <TranscriptionMeta>
+              <span>Recorded: {formatTimestamp(transcription.timestamp)}</span>
+              <span>Duration: {transcription.duration}</span>
+            </TranscriptionMeta>
+          </TranscriptionCard>
         )}
       </GradientBackground>
     </>

@@ -1,3 +1,19 @@
+interface TranscriptionResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  metadata: {
+    duration: string;
+    type: string;
+  };
+  format: string;
+  transcription: {
+    text: string;
+    duration: number;
+    language: string;
+  };
+}
+
 interface JournalRequest {
   audioData: string;
   metadata: {
@@ -9,7 +25,7 @@ interface JournalRequest {
 export const sendJournalEntry = async (
   base64AudioData: string,
   duration: string
-): Promise<void> => {
+): Promise<TranscriptionResponse> => {
   try {
     const payload: JournalRequest = {
       audioData: base64AudioData,
@@ -33,6 +49,9 @@ export const sendJournalEntry = async (
         `Server responded with status ${response.status}: ${errorText}`
       );
     }
+
+    const data: TranscriptionResponse = await response.json();
+    return data;
   } catch (error) {
     console.error("Error sending journal entry:", error);
     throw error;

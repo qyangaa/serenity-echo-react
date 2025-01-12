@@ -33,7 +33,7 @@ export const GradientBackground = styled.div`
   gap: 2rem;
 `;
 
-export const RecordingsList = styled.div`
+export const TranscriptionCard = styled.div`
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
   padding: 1.5rem;
@@ -43,32 +43,25 @@ export const RecordingsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  transition: all 0.3s ease;
 `;
 
-export const RecordingItem = styled.div`
+export const TranscriptionText = styled.div`
   background: rgba(255, 255, 255, 0.9);
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 8px;
+  font-size: 1.1rem;
+  color: #1a237e;
+  line-height: 1.5;
+  min-height: 60px;
+`;
+
+export const TranscriptionMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
   color: #1a237e;
-
-  button {
-    background: #64b5f6;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background: #42a5f5;
-    }
-  }
+  font-size: 0.9rem;
+  opacity: 0.8;
 `;
 
 interface CalminDiskProps {
