@@ -147,3 +147,31 @@ export const CalminDisk = styled.button<CalminDiskProps>`
     filter: blur(8px);
   }
 `;
+
+export const NewJournalButton = styled.button`
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  padding: 0.8rem 1.5rem;
+  background: rgba(103, 58, 183, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: rgba(103, 58, 183, 0.8);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background: rgba(103, 58, 183, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
